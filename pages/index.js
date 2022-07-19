@@ -1,104 +1,79 @@
-import {
-  ThirdwebNftMedia,
-  useAddress,
-  useDisconnect,
-  useMetamask,
-  useSDK,
-} from "@thirdweb-dev/react";
-import { ethers } from "ethers";
+import { ThirdwebNftMedia, useAddress, useMetamask } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
+import NftCard from "../components/NftCard";
+import NftCardContainer from "../components/NftCardContainer";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Profile() {
+  // Wallet connection hooks from React SDK
   const address = useAddress();
   const connectWithMetamask = useMetamask();
-  const disconnectWallet = useDisconnect();
 
-  const sdk = useSDK();
-
+  // State to store the user's loaded tokens
+  const [isLoading, setIsLoading] = useState(true);
   const [tokenData, setTokenData] = useState([]);
 
-  // Make a request to the get-wallet-data api endpoint
+  // Make a request to the get-wallet-data api endpoint (/api/get-wallet-data.js file)
   useEffect(() => {
     if (address) {
+      // If there is a connected address, make the request.
       (async () => {
-        const hi = await fetch("/api/get-wallet-data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        try {
+          const req = await fetch("/api/get-wallet-data", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
 
-          body: JSON.stringify({
-            chainId: 1,
-            address: address,
-          }),
-        });
+            body: JSON.stringify({
+              chainId: 1,
+              address: address,
+            }),
+          });
 
-        const { tokens } = await hi.json();
-        console.log(tokens);
-        setTokenData(tokens);
+          // De-structure tokens out of the response JSON
+          const { tokens } = await req.json();
+          // Set the tokens in state.
+          setTokenData(tokens.filter((t) => t.type === "nft"));
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
       })();
     }
   }, [address]);
 
-  async function transfer(token) {}
-
   return (
     <div>
-      {address ? (
-        <>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
-          <p>Your address: {address}</p>
-
-          {/* Render table from array of tokens in state */}
-          <table style={{ width: "90vw", textAlign: "center" }}>
-            <thead>
-              <tr>
-                <th>Logo</th>
-                <th>Token Type</th>
-                <th>Token Name</th>
-                <th>Token Symbol</th>
-                <th>Token Balance</th>
-                <th>Transfer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tokenData.map((token, i) => (
-                <tr key={i}>
-                  <td>
-                    {token.type === "nft" ? (
-                      <ThirdwebNftMedia
-                        metadata={token.nft_data[0].external_data}
-                        height={64}
-                        width={64}
-                        style={{ width: 128 }}
-                      />
-                    ) : (
-                      <img
-                        src={token.logo_url}
-                        alt={token.name}
-                        style={{ width: 64 }}
-                      />
-                    )}
-                  </td>
-                  <td>{token.type}</td>
-                  <td>{token.contract_name}</td>
-                  <td>{token.contract_ticker_symbol}</td>
-                  <td>
-                    {token.type === "nft"
-                      ? token.balance
-                      : ethers.utils.formatUnits(token.balance)}
-                  </td>
-                  <td>
-                    <button onClick={() => transfer(token)}>Transfer</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <button onClick={connectWithMetamask}>Connect with Metamask</button>
-      )}
+      <>
+        <div className={styles.container}>
+          {address ? (
+            <div className={styles.collectionContainer}>
+              <h1>Your Mumbai ERC-721 Tokens</h1>
+              {!isLoading ? (
+                <div className={styles.nftBoxGrid}>
+                  {tokenData
+                    ?.filter((t) => t.type === "nft")
+                    ?.filter((t) => t.supports_erc?.includes("erc721"))
+                    ?.map((nft, i) => (
+                      <NftCardContainer nft={nft} key={i} />
+                    ))}
+                </div>
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
+          ) : (
+            <a
+              className={styles.mainButton}
+              onClick={() => connectWithMetamask()}
+            >
+              Connect Wallet
+            </a>
+          )}
+        </div>
+      </>
     </div>
   );
 }
