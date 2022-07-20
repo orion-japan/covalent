@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import NftCard from "./NftCard";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 export default function NftCardContainer({ nft }) {
-  const [contract, setContract] = React.useState(null);
+  const [contract, setContract] = useState(null);
 
   useEffect(() => {
     (async () => {
       if (nft) {
         const tw = new ThirdwebSDK("mumbai");
-        const c = await tw.getContract(nft.contract_address);
-        setContract(c);
+        try {
+          const c = await tw.getContract(nft.contract_address);
+          setContract(c);
+        } catch (error) {
+          console.log(error);
+        }
       }
     })();
   }, [nft, nft.contract_address]);

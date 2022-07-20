@@ -1,6 +1,5 @@
-import { ThirdwebNftMedia, useAddress, useMetamask } from "@thirdweb-dev/react";
+import { useAddress, useMetamask } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
-import NftCard from "../components/NftCard";
 import NftCardContainer from "../components/NftCardContainer";
 import styles from "../styles/Home.module.css";
 
@@ -26,7 +25,6 @@ export default function Profile() {
             },
 
             body: JSON.stringify({
-              chainId: 1,
               address: address,
             }),
           });

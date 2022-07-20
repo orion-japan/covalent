@@ -8,8 +8,6 @@ export default async function getWalletData(req, res) {
 
   const apikey = process.env.COVALENT_API_KEY;
 
-  console.log(`Generating signature for address: ${address}`);
-
   let headers = new Headers();
   let authString = `${apikey}:`;
   headers.set("Authorization", "Basic " + btoa(authString));

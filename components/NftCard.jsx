@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ThirdwebNftMedia } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 
 export default function NftCard({ contract, nft }) {
-  const [nftMetadata, setMetadata] = React.useState(null);
+  const [nftMetadata, setMetadata] = useState(null);
 
   useEffect(() => {
     (async () => {

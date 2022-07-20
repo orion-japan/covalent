@@ -11,15 +11,15 @@ function MyApp({ Component, pageProps }) {
   return (
     <ThirdwebProvider desiredChainId={activeChainId}>
       <Head>
-        <title>thirdweb Contract Example Hub</title>
+        <title>thirdweb Covalent Integration</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           name="description"
-          content="thirdweb Example Repository to Showcase How To Use thirdweb's NFT contracts, Marketplace contracts, and token contracts. "
+          content="thirdweb Covalent integration to load a users NFTs and load the metadata about them using thirdweb."
         />
         <meta
           name="keywords"
-          content="thirdweb nft contract example, thirdweb nft tutorial, thirdweb nft guide, thirdweb marketplace, thirdweb marketplace guide, thirdweb token guide"
+          content="thirdweb covalent template, covalent example, covalent"
         />
       </Head>
       <Header />
