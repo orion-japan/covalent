@@ -1,4 +1,4 @@
-import { useAddress, useMetamask } from "@thirdweb-dev/react";
+import { ChainId, useAddress, useMetamask } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import NftCardContainer from "../components/NftCardContainer";
 import styles from "../styles/Home.module.css";
@@ -11,6 +11,7 @@ export default function Profile() {
   // State to store the user's loaded tokens
   const [isLoading, setIsLoading] = useState(true);
   const [tokenData, setTokenData] = useState([]);
+  const [chainId, setChainId] = useState(1);
 
   // Make a request to the get-wallet-data api endpoint (/api/get-wallet-data.js file)
   useEffect(() => {
@@ -26,11 +27,14 @@ export default function Profile() {
 
             body: JSON.stringify({
               address: address,
+              chainId: chainId,
             }),
           });
 
           // De-structure tokens out of the response JSON
           const { tokens } = await req.json();
+
+          console.log(tokens);
           // Set the tokens in state.
           setTokenData(tokens.filter((t) => t.type === "nft"));
         } catch (error) {
@@ -40,7 +44,7 @@ export default function Profile() {
         }
       })();
     }
-  }, [address]);
+  }, [address, chainId]);
 
   return (
     <div>
@@ -48,14 +52,45 @@ export default function Profile() {
         <div className={styles.container}>
           {address ? (
             <div className={styles.collectionContainer}>
-              <h1>Your Mumbai ERC-721 Tokens</h1>
+              <h1>Your Wallet&apos;s NFTs</h1>
+
+              <p>Select a supported chain below:</p>
+
+              <div>
+                {/* Dropdown  Menu of Chain IDs */}
+                <select
+                  onChange={(e) => setChainId(e.target.value)}
+                  value={chainId}
+                >
+                  {Object.entries(ChainId)
+                    .filter(([key]) => isNaN(Number(key)))
+                    .filter(
+                      ([key]) =>
+                        key !== "Localhost" &&
+                        key !== "Hardhat" &&
+                        key !== "Rinkeby"
+                    )
+                    .map(([key, value], index) => (
+                      <option
+                        key={index}
+                        value={value}
+                        onSelect={(e) => setChainId(e.target.value)}
+                      >
+                        {key}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <hr className={styles.divider} />
+
               {!isLoading ? (
-                <div className={styles.nftBoxGrid}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
                   {tokenData
                     ?.filter((t) => t.type === "nft")
                     ?.filter((t) => t.supports_erc?.includes("erc721"))
-                    ?.map((nft, i) => (
-                      <NftCardContainer nft={nft} key={i} />
+                    ?.map((nftCollection, i) => (
+                      <NftCardContainer nftCollection={nftCollection} key={i} />
                     ))}
                 </div>
               ) : (

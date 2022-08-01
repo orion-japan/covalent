@@ -1,31 +1,31 @@
-import { ChainId } from "@thirdweb-dev/sdk";
-
 export default async function getWalletData(req, res) {
   // get address out of request body
   const address = req.body.address;
-
-  const chainId = ChainId.Mumbai;
+  const chainId = req.body.chainId;
 
   const apikey = process.env.COVALENT_API_KEY;
 
   let headers = new Headers();
   let authString = `${apikey}:`;
   headers.set("Authorization", "Basic " + btoa(authString));
-  const URL = `https://api.covalenthq.com/v1/${chainId}/address/${address}/balances_v2/?nft=true&no-nft-fetch=true`;
-  fetch(URL, { method: "GET", headers: headers })
-    .then((res) => res.json())
+  const URL = `https://api.covalenthq.com/v1/${chainId}/address/${address}/balances_v2/?nft=true&no-nft-fetch=false`;
 
-    .then((response) => {
-      console.log(response);
-      res.status(200).json({
-        tokens: response.data.items,
-      });
-    })
-
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({
-        error: error,
-      });
+  try {
+    const covalentRequest = await fetch(URL, {
+      method: "GET",
+      headers: headers,
     });
+    const covalentResponse = await covalentRequest.json();
+
+    const tokens = covalentResponse.data.items;
+
+    return res.status(200).json({
+      tokens: tokens,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: error,
+    });
+  }
 }

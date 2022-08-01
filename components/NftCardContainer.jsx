@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from "react";
-import styles from "../styles/Home.module.css";
-import NftCard from "./NftCard";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import React from "react";
+import { MediaRenderer } from "@thirdweb-dev/react";
 
-export default function NftCardContainer({ nft }) {
-  const [contract, setContract] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      if (nft) {
-        const tw = new ThirdwebSDK("mumbai");
-        try {
-          const c = await tw.getContract(nft.contract_address);
-          setContract(c);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    })();
-  }, [nft, nft.contract_address]);
-
+export default function NftCardContainer({ nftCollection }) {
   return (
-    <>
-      <h2>{nft?.contract_name}</h2>
-      <div className={styles.nftBoxGrid}>
-        {contract &&
-          nft?.nft_data?.map((n, i) => (
-            <NftCard contract={contract} nft={n} key={i} />
-          ))}
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <h2 style={{ marginBottom: 8 }}>{nftCollection?.contract_name}</h2>
+      <p>
+        Balance: <b>{nftCollection?.nft_data?.length}</b>
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        {nftCollection?.nft_data?.map((nft, key) => (
+          <div key={key}>
+            <MediaRenderer
+              style={{ width: 128, height: 128, borderRadius: 16, padding: 4 }}
+              src={nft.external_data.image}
+              alt="A mp4 video"
+            />
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 }
