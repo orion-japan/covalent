@@ -19,6 +19,9 @@ export default function Profile() {
       // If there is a connected address, make the request.
       (async () => {
         try {
+          setTokenData([]);
+          setIsLoading(true);
+
           const req = await fetch("/api/get-wallet-data", {
             method: "POST",
             headers: {
@@ -34,11 +37,10 @@ export default function Profile() {
           // De-structure tokens out of the response JSON
           const { tokens } = await req.json();
 
-          console.log(tokens);
           // Set the tokens in state.
           setTokenData(tokens.filter((t) => t.type === "nft"));
         } catch (error) {
-          console.error(error);
+          console.error("Error getting tokens", error);
         } finally {
           setIsLoading(false);
         }
@@ -90,7 +92,11 @@ export default function Profile() {
                     ?.filter((t) => t.type === "nft")
                     ?.filter((t) => t.supports_erc?.includes("erc721"))
                     ?.map((nftCollection, i) => (
-                      <NftCardContainer nftCollection={nftCollection} key={i} />
+                      <NftCardContainer
+                        nftCollection={nftCollection}
+                        chainId={chainId}
+                        key={i}
+                      />
                     ))}
                 </div>
               ) : (

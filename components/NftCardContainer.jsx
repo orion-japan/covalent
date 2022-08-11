@@ -1,7 +1,7 @@
 import React from "react";
-import { MediaRenderer } from "@thirdweb-dev/react";
+import NftCard from "./NftCard";
 
-export default function NftCardContainer({ nftCollection }) {
+export default function NftCardContainer({ nftCollection, chainId }) {
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -12,15 +12,16 @@ export default function NftCardContainer({ nftCollection }) {
       </p>
 
       <div style={{ display: "flex", flexDirection: "row" }}>
-        {nftCollection?.nft_data?.map((nft, key) => (
-          <div key={key}>
-            <MediaRenderer
-              style={{ width: 128, height: 128, borderRadius: 16, padding: 4 }}
-              src={nft.external_data.image}
-              alt="A mp4 video"
+        {nftCollection?.nft_data?.map((nft, key) => {
+          return (
+            <NftCard
+              key={key}
+              tokenId={nft.token_id}
+              contractAddress={nftCollection.contract_address}
+              chainId={chainId}
             />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

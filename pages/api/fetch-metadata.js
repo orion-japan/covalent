@@ -1,6 +1,7 @@
-export default async function getWalletData(req, res) {
+export default async function fetchMetadata(req, res) {
   // get address out of request body
-  const address = req.body.address;
+  const contractAddress = req.body.contractAddress;
+  const tokenId = req.body.tokenId;
   const chainId = req.body.chainId;
 
   const apikey = process.env.COVALENT_API_KEY;
@@ -8,7 +9,7 @@ export default async function getWalletData(req, res) {
   let headers = new Headers();
   let authString = `${apikey}:`;
   headers.set("Authorization", "Basic " + btoa(authString));
-  const URL = `https://api.covalenthq.com/v1/${chainId}/address/${address}/balances_v2/?nft=true&no-nft-fetch=true`;
+  const URL = `https://api.covalenthq.com/v1/${chainId}/tokens/${contractAddress}/nft_metadata/${tokenId}/`;
 
   try {
     const covalentRequest = await fetch(URL, {
