@@ -1,4 +1,4 @@
-import { ChainId, useAddress, useMetamask } from "@thirdweb-dev/react";
+import { ChainId, useAddress, ConnectWallet } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import NftCardContainer from "../components/NftCardContainer";
 import styles from "../styles/Home.module.css";
@@ -6,7 +6,6 @@ import styles from "../styles/Home.module.css";
 export default function Profile() {
   // Wallet connection hooks from React SDK
   const address = useAddress();
-  const connectWithMetamask = useMetamask();
 
   // State to store the user's loaded tokens
   const [isLoading, setIsLoading] = useState(true);
@@ -104,12 +103,7 @@ export default function Profile() {
               )}
             </div>
           ) : (
-            <a
-              className={styles.mainButton}
-              onClick={() => connectWithMetamask()}
-            >
-              Connect Wallet
-            </a>
+            <ConnectWallet colorMode="dark" accentColor="#5204BF" />
           )}
         </div>
       </>

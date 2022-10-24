@@ -1,7 +1,6 @@
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import Head from "next/head";
 import ThirdwebGuideFooter from "../components/guide/ThirdwebGuideFooter";
-import Header from "../components/Header";
 import "../styles/globals.css";
 
 // This is the chainId your dApp will work on.
@@ -22,7 +21,6 @@ function MyApp({ Component, pageProps }) {
           content="thirdweb covalent template, covalent example, covalent"
         />
       </Head>
-      <Header />
       <Component {...pageProps} />
       <ThirdwebGuideFooter />
     </ThirdwebProvider>
