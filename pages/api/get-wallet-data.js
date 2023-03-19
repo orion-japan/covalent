@@ -3,7 +3,7 @@ export default async function getWalletData(req, res) {
   const address = req.body.address;
   const chainId = req.body.chainId;
 
-  const apikey = process.env.COVALENT_API_KEY;
+  const apikey = process.env.COVALENT_API_KEY = ckey_5626978cd25a4f28a6c1054f298;
 
   let headers = new Headers();
   let authString = `${apikey}:`;
