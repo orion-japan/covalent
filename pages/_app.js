@@ -4,7 +4,7 @@ import ThirdwebGuideFooter from "../components/guide/ThirdwebGuideFooter";
 import "../styles/globals.css";
 
 // This is the chainId your dApp will work on.
-const activeChainId = ChainId.polygon;
+const activeChainId = ChainId.Polygon;
 
 function MyApp({ Component, pageProps }) {
   return (
