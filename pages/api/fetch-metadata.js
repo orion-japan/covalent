@@ -4,7 +4,7 @@ export default async function fetchMetadata(req, res) {
   const tokenId = req.body.tokenId;
   const chainId = req.body.chainId;
 
-  const apikey = process.env.COVALENT_API_KEY;
+  const apikey = process.env.COVALENT_API_KEY=ckey_5626978cd25a4f28a6c1054f298;
 
   let headers = new Headers();
   let authString = `${apikey}:`;
